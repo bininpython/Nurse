@@ -1,5 +1,5 @@
 {
-  "name": "1-Receber-Mensagens-Nurse",
+  "name": "1-Receber-Mensagens-Nurse-AI",
   "nodes": [
     {
       "parameters": {
@@ -11,7 +11,7 @@
       "name": "Webhook Z-API",
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 1,
-      "position": [ 250, 300 ]
+      "position": [0, 300]
     },
     {
       "parameters": {
@@ -21,21 +21,65 @@
       "name": "Buscar Dados Supabase",
       "type": "n8n-nodes-base.postgres",
       "typeVersion": 2,
-      "position": [ 450, 300 ]
+      "position": [200, 300]
     },
     {
       "parameters": {
-        "method": "POST",
-        "url": "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=SEU_GEMINI_API_KEY",
-        "sendBody": true,
-        "bodyParameters": {},
-        "specifyBody": "json",
-        "jsonBody": "{\n  \"contents\": [\n    {\n      \"parts\": [\n        {\n          \"text\": \"Você é Nurse, uma assistente virtual humanizada de saúde. Seja curta, acolhedora e motivacional. NUNCA prescreva remédios.\\n\\nMENSAGEM DO PACIENTE: {{ $('Webhook Z-API').item.json.body.text.message }}\"\n        }\n      ]\n    }\n  ]\n}"
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{ $json.telefone }}",
+              "operation": "isNotEmpty"
+            }
+          ]
+        }
       },
-      "name": "Google Gemini",
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 4,
-      "position": [ 650, 300 ]
+      "name": "Usuário Existe?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [400, 300]
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "INSERT INTO users (telefone, nome) VALUES ('{{ $('Webhook Z-API').item.body.phone }}', '{{ $('Webhook Z-API').item.body.senderName }}')"
+      },
+      "name": "Cadastrar Supabase",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2,
+      "position": [400, 500]
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $('Webhook Z-API').item.body.text.message }}",
+        "options": {
+          "systemMessage": "Você é Nurse, uma assistente virtual humanizada. Converse com o paciente com naturalidade, seja empática e acolhedora. Responda de forma fluida, baseado no histórico da conversa. Nunca prescreva remédios. O nome do paciente é {{ $('Webhook Z-API').item.body.senderName }}."
+        }
+      },
+      "name": "AI Agent",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1,
+      "position": [700, 300]
+    },
+    {
+      "parameters": {
+        "modelName": "models/gemini-2.5-flash"
+      },
+      "name": "Google Gemini Chat Model",
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [650, 500]
+    },
+    {
+      "parameters": {
+        "tableName": "chat_messages",
+        "sessionId": "={{ $('Webhook Z-API').item.body.phone }}"
+      },
+      "name": "Postgres Chat Memory",
+      "type": "@n8n/n8n-nodes-langchain.memoryPostgresChat",
+      "typeVersion": 1,
+      "position": [800, 500]
     },
     {
       "parameters": {
@@ -53,47 +97,38 @@
         "sendBody": true,
         "bodyParameters": {},
         "specifyBody": "json",
-        "jsonBody": "{\n  \"phone\": \"{{ $('Webhook Z-API').first().json.body.phone }}\",\n  \"message\": \"{{ $json.candidates[0].content.parts[0].text }}\"\n}"
+        "jsonBody": "{\n  \"phone\": \"{{ $('Webhook Z-API').first().json.body.phone }}\",\n  \"message\": \"{{ $json.output }}\"\n}"
       },
       "name": "Z-API Responder",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4,
-      "position": [ 850, 300 ]
+      "position": [1000, 300]
     }
   ],
   "connections": {
     "Webhook Z-API": {
-      "main": [
-        [
-          {
-            "node": "Buscar Dados Supabase",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
+      "main": [ [ { "node": "Buscar Dados Supabase", "type": "main", "index": 0 } ] ]
     },
     "Buscar Dados Supabase": {
+      "main": [ [ { "node": "Usuário Existe?", "type": "main", "index": 0 } ] ]
+    },
+    "Usuário Existe?": {
       "main": [
-        [
-          {
-            "node": "Google Gemini",
-            "type": "main",
-            "index": 0
-          }
-        ]
+        [ { "node": "AI Agent", "type": "main", "index": 0 } ],
+        [ { "node": "Cadastrar Supabase", "type": "main", "index": 0 } ]
       ]
     },
-    "Google Gemini": {
-      "main": [
-        [
-          {
-            "node": "Z-API Responder",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
+    "Cadastrar Supabase": {
+      "main": [ [ { "node": "AI Agent", "type": "main", "index": 0 } ] ]
+    },
+    "AI Agent": {
+      "main": [ [ { "node": "Z-API Responder", "type": "main", "index": 0 } ] ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [ [ { "node": "AI Agent", "type": "ai_languageModel", "index": 0 } ] ]
+    },
+    "Postgres Chat Memory": {
+      "ai_memory": [ [ { "node": "AI Agent", "type": "ai_memory", "index": 0 } ] ]
     }
   }
 }
