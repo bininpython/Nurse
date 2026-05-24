@@ -4,11 +4,11 @@
     {
       "parameters": {
         "httpMethod": "POST",
-        "path": "evolution-webhook",
+        "path": "zapi-webhook",
         "responseMode": "onReceived",
         "options": {}
       },
-      "name": "Webhook Evolution",
+      "name": "Webhook Z-API",
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 1,
       "position": [ 250, 300 ]
@@ -16,7 +16,7 @@
     {
       "parameters": {
         "operation": "executeQuery",
-        "query": "SELECT * FROM users WHERE telefone = '{{ $json.body.data.key.remoteJid }}' LIMIT 1"
+        "query": "SELECT * FROM users WHERE telefone = '{{ $json.body.phone }}' LIMIT 1"
       },
       "name": "Buscar Dados Supabase",
       "type": "n8n-nodes-base.postgres",
@@ -25,8 +25,12 @@
     },
     {
       "parameters": {
-        "model": "gemini-1.5-pro",
-        "prompt": "Você é Nurse, uma assistente virtual humanizada...\nMENSAGEM: {{ $json.body.data.message.conversation }}"
+        "method": "POST",
+        "url": "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=AIzaSyCcOP-pSpAKy4fPRnkfLwtH7ESvcnt0mog",
+        "sendBody": true,
+        "bodyParameters": {},
+        "specifyBody": "json",
+        "jsonBody": "{\n  \"contents\": [\n    {\n      \"parts\": [\n        {\n          \"text\": \"Você é Nurse, uma assistente virtual humanizada de saúde. Seja curta, acolhedora e motivacional. NUNCA prescreva remédios.\\n\\nMENSAGEM DO PACIENTE: {{ $('Webhook Z-API').item.json.body.text.message }}\"\n        }\n      ]\n    }\n  ]\n}"
       },
       "name": "Google Gemini",
       "type": "n8n-nodes-base.httpRequest",
@@ -36,38 +40,29 @@
     {
       "parameters": {
         "method": "POST",
-        "url": "http://18.217.195.140:8080/message/sendText/Nurse",
+        "url": "https://api.z-api.io/instances/SUA_INSTANCIA/token/SEU_TOKEN/send-text",
         "sendHeaders": true,
         "headerParameters": {
           "parameters": [
             {
-              "name": "apikey",
-              "value": "GLOBAL_API_KEY_DA_SUA_EVOLUTION"
+              "name": "Client-Token",
+              "value": "SEU_CLIENT_TOKEN"
             }
           ]
         },
         "sendBody": true,
-        "bodyParameters": {
-          "parameters": [
-            {
-              "name": "number",
-              "value": "={{ $node['Webhook Evolution'].json.body.data.key.remoteJid }}"
-            },
-            {
-              "name": "text",
-              "value": "={{ $json.response }}"
-            }
-          ]
-        }
+        "bodyParameters": {},
+        "specifyBody": "json",
+        "jsonBody": "{\n  \"phone\": \"{{ $('Webhook Z-API').first().json.body.phone }}\",\n  \"message\": \"{{ $json.candidates[0].content.parts[0].text }}\"\n}"
       },
-      "name": "Evolution API Responder",
+      "name": "Z-API Responder",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4,
       "position": [ 850, 300 ]
     }
   ],
   "connections": {
-    "Webhook Evolution": {
+    "Webhook Z-API": {
       "main": [
         [
           {
@@ -93,7 +88,7 @@
       "main": [
         [
           {
-            "node": "Evolution API Responder",
+            "node": "Z-API Responder",
             "type": "main",
             "index": 0
           }
