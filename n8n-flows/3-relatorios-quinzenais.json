@@ -1,0 +1,64 @@
+{
+  "name": "3-Relatorios-Quinzenais-Nurse",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [ { "field": "days", "daysInterval": 15 } ]
+        }
+      },
+      "name": "Cron 15 Dias",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.1,
+      "position": [ 250, 300 ]
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "SELECT u.id, u.telefone, u.nome, json_agg(l) as logs FROM users u LEFT JOIN medication_logs l ON u.id = l.user_id WHERE l.data_hora > now() - interval '15 days' GROUP BY u.id"
+      },
+      "name": "Buscar Logs Supabase",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2,
+      "position": [ 450, 300 ]
+    },
+    {
+      "parameters": {
+        "model": "gemini-1.5-pro",
+        "prompt": "Gere um relatório quinzenal amigável para o paciente baseado nestes dados: {{ $json.logs }}"
+      },
+      "name": "Google Gemini Gerar Relatório",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [ 650, 300 ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://EVOLUTION_API_URL/message/sendText/{{INSTANCE}}",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            { "name": "number", "value": "={{ $json.telefone }}" },
+            { "name": "text", "value": "📊 Seu Relatório Quinzenal da Nurse chegou!\n\n{{ $json.response }}" }
+          ]
+        }
+      },
+      "name": "Evolution API Enviar Relatório",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [ 850, 300 ]
+    }
+  ],
+  "connections": {
+    "Cron 15 Dias": {
+      "main": [ [ { "node": "Buscar Logs Supabase", "type": "main", "index": 0 } ] ]
+    },
+    "Buscar Logs Supabase": {
+      "main": [ [ { "node": "Google Gemini Gerar Relatório", "type": "main", "index": 0 } ] ]
+    },
+    "Google Gemini Gerar Relatório": {
+      "main": [ [ { "node": "Evolution API Enviar Relatório", "type": "main", "index": 0 } ] ]
+    }
+  }
+}

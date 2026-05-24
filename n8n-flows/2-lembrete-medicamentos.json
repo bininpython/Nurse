@@ -1,0 +1,52 @@
+{
+  "name": "2-Lembrete-Medicamentos-Nurse",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [ { "field": "minutes", "minutesInterval": 60 } ]
+        }
+      },
+      "name": "Cron Lembrete",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.1,
+      "position": [ 250, 300 ]
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "SELECT u.telefone, m.medicamento, m.id FROM medications m JOIN users u ON m.user_id = u.id WHERE m.horario = date_trunc('hour', now())::time"
+      },
+      "name": "Buscar Horários Supabase",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2,
+      "position": [ 450, 300 ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://EVOLUTION_API_URL/message/sendButtons/{{INSTANCE}}",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            { "name": "number", "value": "={{ $json.telefone }}" },
+            { "name": "text", "value": "💊 Hora do seu remédio {{ $json.medicamento }}.\n\nVocê tomou?" },
+            { "name": "buttons", "value": "[{\"buttonId\": \"sim_{{$json.id}}\", \"buttonText\": {\"displayText\": \"SIM\"}}, {\"buttonId\": \"nao_{{$json.id}}\", \"buttonText\": {\"displayText\": \"NÃO\"}}]" }
+          ]
+        }
+      },
+      "name": "Evolution API Enviar Lembrete",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [ 650, 300 ]
+    }
+  ],
+  "connections": {
+    "Cron Lembrete": {
+      "main": [ [ { "node": "Buscar Horários Supabase", "type": "main", "index": 0 } ] ]
+    },
+    "Buscar Horários Supabase": {
+      "main": [ [ { "node": "Evolution API Enviar Lembrete", "type": "main", "index": 0 } ] ]
+    }
+  }
+}
