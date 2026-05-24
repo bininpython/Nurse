@@ -36,13 +36,13 @@
     {
       "parameters": {
         "method": "POST",
-        "url": "http://EVOLUTION_API_URL/message/sendText/{{INSTANCE}}",
+        "url": "http://18.217.195.140:8080/message/sendText/Nurse",
         "sendHeaders": true,
         "headerParameters": {
           "parameters": [
             {
               "name": "apikey",
-              "value": "YOUR_API_KEY"
+              "value": "GLOBAL_API_KEY_DA_SUA_EVOLUTION"
             }
           ]
         },

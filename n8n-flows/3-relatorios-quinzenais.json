@@ -35,7 +35,7 @@
     {
       "parameters": {
         "method": "POST",
-        "url": "http://EVOLUTION_API_URL/message/sendText/{{INSTANCE}}",
+        "url": "http://18.217.195.140:8080/message/sendText/Nurse",
         "sendBody": true,
         "bodyParameters": {
           "parameters": [

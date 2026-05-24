@@ -25,7 +25,7 @@
     {
       "parameters": {
         "method": "POST",
-        "url": "http://EVOLUTION_API_URL/message/sendButtons/{{INSTANCE}}",
+        "url": "http://18.217.195.140:8080/message/sendButtons/Nurse",
         "sendBody": true,
         "bodyParameters": {
           "parameters": [
