@@ -2,7 +2,7 @@ import React from 'react';
 import { MessageCircle, Brain, Heart, AlarmClock, Activity, Headset } from 'lucide-react';
 
 export default function LandingPage() {
-  const WHATSAPP_LINK = "https://wa.me/5511999999999?text=Oi%20Nurse!"; // Altere aqui o número!
+  const WHATSAPP_LINK = "https://wa.me/message/4VBZAOIHV5EQM1";
 
   return (
     <div className="bg-white text-[#111111] antialiased font-sans">
