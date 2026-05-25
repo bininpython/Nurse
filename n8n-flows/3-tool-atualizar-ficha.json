@@ -1,0 +1,40 @@
+{
+  "name": "Tool: Atualizar Ficha Paciente",
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "76d54fb3-2415-46ff-b248-18548a80d7a0",
+      "name": "Execute Workflow Trigger",
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1,
+      "position": [0, 0]
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "UPDATE users SET \npeso = COALESCE(NULLIF('{{$json.peso}}', 'undefined')::numeric, peso),\naltura = COALESCE(NULLIF('{{$json.altura}}', 'undefined')::numeric, altura),\nidade = COALESCE(NULLIF('{{$json.idade}}', 'undefined')::integer, idade),\nobjetivo = COALESCE(NULLIF('{{$json.objetivo}}', 'undefined'), objetivo),\ndoencas = COALESCE(NULLIF('{{$json.doencas}}', 'undefined'), doencas)\nWHERE telefone = '{{$json.telefone}}' RETURNING *;"
+      },
+      "id": "e321e1a5-82df-474c-8a03-7b49463ed9a3",
+      "name": "Atualizar Supabase",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.4,
+      "position": [220, 0]
+    }
+  ],
+  "connections": {
+    "Execute Workflow Trigger": {
+      "main": [
+        [
+          {
+            "node": "Atualizar Supabase",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  }
+}

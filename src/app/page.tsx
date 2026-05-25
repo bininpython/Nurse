@@ -1,134 +1,172 @@
 import React from 'react';
 import Link from 'next/link';
-import { Activity, HeartPulse, BrainCircuit, BellRing, Apple, Target, Phone, ArrowRight } from 'lucide-react';
+import { Activity, HeartPulse, BrainCircuit, BellRing, ShieldCheck, MessageCircle, ArrowRight, CheckCircle2 } from 'lucide-react';
 
 export default function LandingPage() {
+  const WHATSAPP_LINK = "https://wa.me/5511999999999?text=Oi%20Nurse!"; // Substitua pelo número real do seu bot da Z-API
+
   return (
-    <div className="min-h-screen bg-black text-slate-100 overflow-x-hidden selection:bg-blue-500/30">
+    <div className="min-h-screen bg-[#020617] text-slate-100 overflow-x-hidden selection:bg-blue-500/30 font-sans">
       {/* Navbar */}
-      <nav className="fixed w-full z-50 bg-black/50 backdrop-blur-md border-b border-white/10">
+      <nav className="fixed w-full z-50 bg-[#020617]/80 backdrop-blur-lg border-b border-white/5">
         <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <div className="w-10 h-10 rounded-full bg-blue-500/20 flex items-center justify-center border border-blue-500/30 shadow-[0_0_15px_rgba(59,130,246,0.3)]">
-              <Activity className="text-blue-400" size={20} />
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-600 to-cyan-500 flex items-center justify-center shadow-lg shadow-blue-500/20">
+              <Activity className="text-white" size={20} />
             </div>
-            <span className="text-xl font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-cyan-300">
+            <span className="text-2xl font-bold tracking-tight text-white">
               Nurse
             </span>
           </div>
+          <div className="hidden md:flex items-center gap-8 text-sm font-medium text-slate-300">
+            <a href="#funcionalidades" className="hover:text-white transition-colors">Funcionalidades</a>
+            <a href="#como-funciona" className="hover:text-white transition-colors">Como Funciona</a>
+            <a href="#planos" className="hover:text-white transition-colors">Planos</a>
+          </div>
           <div className="flex gap-4 items-center">
-            <Link href="/dashboard" className="text-sm text-gray-300 hover:text-white transition-colors">
-              Acesso Restrito
-            </Link>
-            <a href="#comecar" className="px-5 py-2 rounded-full bg-blue-600 hover:bg-blue-500 text-sm font-medium transition-all shadow-[0_0_20px_rgba(37,99,235,0.4)] hover:scale-105">
-              Assinar Agora
+            <a 
+              href={WHATSAPP_LINK}
+              target="_blank"
+              rel="noopener noreferrer" 
+              className="px-6 py-2.5 rounded-full bg-white text-slate-900 hover:bg-slate-100 text-sm font-bold transition-all shadow-[0_0_20px_rgba(255,255,255,0.1)] hover:scale-105 flex items-center gap-2"
+            >
+              <MessageCircle size={18} className="text-[#25D366]" />
+              Começar Agora
             </a>
           </div>
         </div>
       </nav>
 
       {/* Hero Section */}
-      <section className="relative pt-40 pb-20 px-6 lg:pt-48 lg:pb-32 flex flex-col items-center justify-center text-center">
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-blue-600/10 rounded-full blur-[120px] pointer-events-none"></div>
+      <section className="relative pt-40 pb-20 px-6 lg:pt-48 lg:pb-32 flex flex-col items-center justify-center text-center overflow-hidden">
+        {/* Background Glows */}
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1000px] h-[500px] bg-blue-600/20 rounded-full blur-[150px] pointer-events-none"></div>
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-cyan-500/10 rounded-full blur-[120px] pointer-events-none"></div>
         
-        <span className="px-4 py-1.5 rounded-full border border-blue-500/30 bg-blue-500/10 text-blue-400 text-xs font-semibold uppercase tracking-wider mb-8">
-          Sua Saúde em Boas Mãos
-        </span>
+        <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-blue-500/30 bg-blue-500/10 text-blue-300 text-sm font-medium mb-8 backdrop-blur-sm">
+          <ShieldCheck size={16} /> Aprovado por profissionais da saúde
+        </div>
         
-        <h1 className="text-5xl md:text-7xl font-extrabold tracking-tight max-w-4xl leading-tight mb-8">
-          Sua <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-300">Enfermeira Pessoal</span> e Coach de Rotina no WhatsApp.
+        <h1 className="text-5xl md:text-7xl font-extrabold tracking-tight max-w-5xl leading-[1.1] mb-8 text-balance">
+          Sua <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-blue-500 to-indigo-500">Enfermeira Pessoal</span><br />
+          direto no WhatsApp.
         </h1>
         
-        <p className="text-lg md:text-xl text-gray-400 max-w-2xl mb-12">
-          Lembretes automáticos de medicamentos, acompanhamento de exercícios e relatórios de saúde gerados por IA. Tudo na palma da sua mão.
+        <p className="text-lg md:text-xl text-slate-400 max-w-2xl mb-12 text-balance leading-relaxed">
+          Chega de aplicativos complexos. A Nurse usa Inteligência Artificial avançada para lembrar seus remédios, acompanhar seus treinos e cuidar da sua saúde, tudo através de uma conversa natural.
         </p>
 
-        <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
-          <a href="#funcionalidades" className="px-8 py-4 rounded-full bg-blue-600 hover:bg-blue-500 text-base font-medium transition-all shadow-[0_0_30px_rgba(37,99,235,0.4)] flex items-center justify-center gap-2">
-            Ver Funcionalidades <ArrowRight size={18} />
-          </a>
-          <a href="#como-funciona" className="px-8 py-4 rounded-full bg-white/5 hover:bg-white/10 border border-white/10 text-base font-medium transition-all flex items-center justify-center">
-            Como Funciona?
+        <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto relative z-10">
+          <a 
+            href={WHATSAPP_LINK}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="px-8 py-4 rounded-full bg-gradient-to-r from-[#25D366] to-[#128C7E] hover:scale-105 text-white text-lg font-bold transition-all shadow-[0_0_30px_rgba(37,211,102,0.3)] flex items-center justify-center gap-3"
+          >
+            <MessageCircle size={24} />
+            Testar no WhatsApp
           </a>
         </div>
+        <p className="mt-6 text-sm text-slate-500">Sem download. Sem senhas. Teste grátis hoje.</p>
       </section>
 
-      {/* Features Grid */}
-      <section id="funcionalidades" className="py-24 px-6 bg-slate-900/50 border-y border-white/5">
+      {/* Funcionalidades O Que o SaaS Faz */}
+      <section id="funcionalidades" className="py-24 px-6 relative z-10">
         <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">O que a Nurse faz por você?</h2>
-            <p className="text-gray-400">Inteligência Artificial humanizada focada no seu bem-estar.</p>
+          <div className="text-center mb-20">
+            <h2 className="text-3xl md:text-5xl font-bold mb-6">Tudo que você precisa, <br/><span className="text-blue-400">em um só lugar.</span></h2>
+            <p className="text-lg text-slate-400 max-w-2xl mx-auto">Nossa inteligência artificial foi desenhada para ser invisível na tecnologia, mas extremamente presente no seu cuidado diário.</p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {[
-              { icon: BellRing, title: "Lembretes de Remédios", desc: "Nunca mais esqueça de tomar sua medicação. A Nurse te avisa na hora exata pelo WhatsApp.", color: "text-red-400" },
-              { icon: Target, title: "Foco em Emagrecimento", desc: "Acompanhamento diário para ajudar você a atingir suas metas de peso e saúde.", color: "text-emerald-400" },
-              { icon: HeartPulse, title: "Doenças Crônicas", desc: "Atenção especial para rotinas de pacientes com Diabetes e Hipertensão.", color: "text-purple-400" },
-              { icon: Activity, title: "Acompanhamento de Treino", desc: "Lembretes e motivação para os seus dias de academia ou atividade física.", color: "text-blue-400" },
-              { icon: BrainCircuit, title: "Relatórios de IA", desc: "Resumos quinzenais detalhados sobre o seu progresso, adesão e humor.", color: "text-cyan-400" },
-              { icon: Phone, title: "Tudo via WhatsApp", desc: "Sem necessidade de baixar novos apps. Converse com a Nurse naturalmente.", color: "text-green-400" }
-            ].map((feat, i) => (
-              <div key={i} className="glass-card p-8 flex flex-col gap-4 group hover:bg-white/[0.03]">
-                <div className={`w-12 h-12 rounded-lg bg-white/5 flex items-center justify-center border border-white/10 group-hover:scale-110 transition-transform ${feat.color}`}>
-                  <feat.icon size={24} />
-                </div>
-                <h3 className="text-xl font-semibold mt-2">{feat.title}</h3>
-                <p className="text-gray-400 leading-relaxed">{feat.desc}</p>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {/* Feature 1 */}
+            <div className="bg-gradient-to-br from-slate-900 to-slate-950 p-10 rounded-3xl border border-white/5 hover:border-blue-500/30 transition-colors group">
+              <div className="w-14 h-14 rounded-2xl bg-blue-500/10 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                <BrainCircuit className="text-blue-400" size={28} />
               </div>
-            ))}
+              <h3 className="text-2xl font-bold mb-4 text-white">Memória Perpétua</h3>
+              <p className="text-slate-400 leading-relaxed">A Nurse nunca esquece de você. Ela decora seu peso, altura, histórico médico e alergias. Quando você fala com ela meses depois, ela continua a conversa exatamente de onde parou, como um médico da família.</p>
+            </div>
+
+            {/* Feature 2 */}
+            <div className="bg-gradient-to-br from-slate-900 to-slate-950 p-10 rounded-3xl border border-white/5 hover:border-cyan-500/30 transition-colors group">
+              <div className="w-14 h-14 rounded-2xl bg-cyan-500/10 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                <BellRing className="text-cyan-400" size={28} />
+              </div>
+              <h3 className="text-2xl font-bold mb-4 text-white">Lembretes Ativos</h3>
+              <p className="text-slate-400 leading-relaxed">Diferente de um bot comum que só responde, a Nurse toma a iniciativa. Ela varre seu calendário e te chama no WhatsApp na hora exata: <br/><span className="italic text-slate-300">"João, deu a hora do seu remédio da pressão, já tomou?"</span></p>
+            </div>
+
+            {/* Feature 3 */}
+            <div className="bg-gradient-to-br from-slate-900 to-slate-950 p-10 rounded-3xl border border-white/5 hover:border-emerald-500/30 transition-colors group">
+              <div className="w-14 h-14 rounded-2xl bg-emerald-500/10 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                <Activity className="text-emerald-400" size={28} />
+              </div>
+              <h3 className="text-2xl font-bold mb-4 text-white">Auto-Cadastro Invisível</h3>
+              <p className="text-slate-400 leading-relaxed">Ninguém gosta de formulários chatos. Para entrar na Nurse, você só precisa mandar um "Oi" no WhatsApp. Nosso sistema cria sua conta no banco de dados automaticamente em milissegundos.</p>
+            </div>
+
+            {/* Feature 4 */}
+            <div className="bg-gradient-to-br from-slate-900 to-slate-950 p-10 rounded-3xl border border-white/5 hover:border-purple-500/30 transition-colors group">
+              <div className="w-14 h-14 rounded-2xl bg-purple-500/10 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                <HeartPulse className="text-purple-400" size={28} />
+              </div>
+              <h3 className="text-2xl font-bold mb-4 text-white">Apoio Emocional</h3>
+              <p className="text-slate-400 leading-relaxed">Dias difíceis na dieta ou falta de ânimo para o treino? A Nurse foi treinada com um tom acolhedor e motivacional. Ela age como sua personal trainer e psicóloga de bolso para manter sua constância.</p>
+            </div>
           </div>
         </div>
       </section>
 
-      {/* How it works */}
-      <section id="como-funciona" className="py-24 px-6">
-        <div className="max-w-4xl mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">Como a Nurse funciona?</h2>
-            <p className="text-gray-400">Três passos simples para transformar sua saúde.</p>
-          </div>
-
-          <div className="space-y-12 relative before:absolute before:inset-0 before:ml-5 before:-translate-x-px md:before:mx-auto md:before:translate-x-0 before:h-full before:w-0.5 before:bg-gradient-to-b before:from-transparent before:via-blue-500/50 before:to-transparent">
-            {[
-              { step: "1", title: "Cadastro Inteligente", desc: "Iniciamos com uma conversa rápida para entender seus objetivos, problemas de saúde e horários de medicação." },
-              { step: "2", title: "Rotina e Lembretes", desc: "A Nurse começa a te enviar mensagens diárias com lembretes interativos e motivação." },
-              { step: "3", title: "Relatórios Quinzenais", desc: "Receba PDFs com a evolução da sua constância para compartilhar com seu médico." }
-            ].map((item, i) => (
-              <div key={i} className="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group is-active">
-                <div className="flex items-center justify-center w-10 h-10 rounded-full border-4 border-black bg-blue-600 text-white font-bold shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2 shadow-[0_0_15px_rgba(37,99,235,0.5)] z-10">
-                  {item.step}
-                </div>
-                <div className="w-[calc(100%-4rem)] md:w-[calc(50%-2.5rem)] glass-card p-6">
-                  <h3 className="text-xl font-bold mb-2">{item.title}</h3>
-                  <p className="text-gray-400">{item.desc}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* CTA / Pricing */}
-      <section id="comecar" className="py-24 px-6 bg-gradient-to-t from-blue-900/20 to-black">
-        <div className="max-w-4xl mx-auto text-center glass-card p-12 border-blue-500/30">
-          <h2 className="text-3xl md:text-5xl font-bold mb-6">Pronto para cuidar melhor de você?</h2>
-          <p className="text-xl text-gray-400 mb-10">Assine o plano premium e tenha acompanhamento 24/7 direto no seu celular.</p>
+      {/* Pricing */}
+      <section id="planos" className="py-24 px-6 relative">
+        <div className="absolute inset-0 bg-blue-900/10 clip-path-slant pointer-events-none"></div>
+        <div className="max-w-4xl mx-auto text-center relative z-10">
+          <h2 className="text-3xl md:text-4xl font-bold mb-4">Invista na sua saúde hoje.</h2>
+          <p className="text-lg text-slate-400 mb-12">Um valor acessível para você ter uma assistente médica 24 horas por dia.</p>
           
-          <div className="inline-block p-[1px] rounded-full bg-gradient-to-r from-blue-500 to-cyan-400 mb-6 hover:scale-105 transition-transform">
-            <button className="px-10 py-5 rounded-full bg-black text-lg font-bold hover:bg-black/80 transition-colors flex items-center gap-3">
-              Começar por R$ 29,90 / mês <ArrowRight />
-            </button>
+          <div className="bg-slate-900/80 backdrop-blur-xl border border-blue-500/20 p-8 md:p-12 rounded-3xl max-w-lg mx-auto shadow-2xl shadow-blue-900/20">
+            <h3 className="text-2xl font-bold text-white mb-2">Plano Nurse Premium</h3>
+            <div className="flex items-end justify-center gap-1 mb-8">
+              <span className="text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-300">R$ 29,90</span>
+              <span className="text-slate-400 mb-2">/mês</span>
+            </div>
+            
+            <ul className="space-y-4 mb-10 text-left">
+              {[
+                "Acesso ilimitado ao WhatsApp da Nurse",
+                "Ficha técnica salva em nuvem de segurança",
+                "Lembretes infinitos de remédios e treinos",
+                "Relatórios semanais de evolução",
+                "Cancelamento fácil a qualquer momento"
+              ].map((item, i) => (
+                <li key={i} className="flex items-center gap-3 text-slate-300">
+                  <CheckCircle2 className="text-cyan-400 shrink-0" size={20} />
+                  <span>{item}</span>
+                </li>
+              ))}
+            </ul>
+
+            <a 
+              href={WHATSAPP_LINK}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="w-full block py-4 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-lg transition-all shadow-lg hover:shadow-blue-500/25"
+            >
+              Assinar Agora
+            </a>
           </div>
-          <p className="text-sm text-gray-500">Cancele a qualquer momento. Sem fidelidade.</p>
         </div>
       </section>
 
       {/* Footer */}
-      <footer className="border-t border-white/10 py-12 px-6 text-center text-gray-500">
-        <p>© {new Date().getFullYear()} Nurse SaaS. Todos os direitos reservados.</p>
-        <p className="mt-2 text-sm">Este serviço não substitui orientação médica profissional.</p>
+      <footer className="border-t border-white/5 py-12 px-6 text-center text-slate-500 bg-[#020617] relative z-20">
+        <div className="flex items-center justify-center gap-2 mb-4">
+          <Activity size={24} className="text-blue-500/50" />
+          <span className="text-xl font-bold text-slate-300">Nurse SaaS</span>
+        </div>
+        <p>© {new Date().getFullYear()} Nurse Health Tech. Todos os direitos reservados.</p>
+        <p className="mt-2 text-xs text-slate-600 max-w-lg mx-auto">A Nurse é uma inteligência artificial de acompanhamento e suporte à rotina saudável. Suas respostas não substituem diagnósticos, prescrições ou orientações de médicos profissionais.</p>
       </footer>
     </div>
   );
